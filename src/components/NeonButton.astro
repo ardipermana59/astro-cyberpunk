@@ -1,0 +1,81 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'cyan' | 'magenta' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+  type?: 'button' | 'submit' | 'reset';
+  target?: '_blank' | '_self';
+}
+
+const {
+  href,
+  variant = 'cyan',
+  size = 'md',
+  class: className = '',
+  type = 'button',
+  target = '_self'
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-lg',
+};
+
+const variantClasses = {
+  cyan: 'border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan hover:text-cyber-dark neon-border-cyan',
+  magenta: 'border-cyber-magenta text-cyber-magenta hover:bg-cyber-magenta hover:text-cyber-dark neon-border-magenta',
+  outline: 'border-cyber-text text-cyber-text hover:border-cyber-cyan hover:text-cyber-cyan',
+};
+
+const baseClasses = 'inline-block font-orbitron font-bold border-2 rounded-lg transition-all duration-300 uppercase tracking-wider hover:scale-105 hover:shadow-lg cursor-pointer';
+
+const Element = href ? 'a' : 'button';
+---
+
+<Element
+  href={href}
+  type={!href ? type : undefined}
+  target={target}
+  class={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+>
+  <slot />
+</Element>
+
+<style>
+  a, button {
+    position: relative;
+    overflow: hidden;
+  }
+
+  a::before, button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.3;
+    transition: width 0.6s, height 0.6s;
+  }
+
+  a:hover::before, button:hover::before {
+    width: 300%;
+    height: 300%;
+  }
+
+  a:active::before, button:active::before {
+    width: 100%;
+    height: 100%;
+    transition: width 0s, height 0s;
+  }
+
+  a > *, button > * {
+    position: relative;
+    z-index: 1;
+  }
+</style>

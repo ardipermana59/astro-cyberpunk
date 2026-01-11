@@ -1,0 +1,56 @@
+---
+import GlowEffect from './GlowEffect.astro';
+import DecorativeCorners from './DecorativeCorners.astro';
+
+interface Props {
+  title: string;
+  iconColor?: string;
+  bgColor?: string;
+  borderColor?: string;
+  glowColor?: string;
+  cornerPosition?: 'all' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'top' | 'bottom';
+  className?: string;
+}
+
+const {
+  title,
+  iconColor = '#00fff0',
+  bgColor = 'rgba(0, 255, 240, 0.1)',
+  borderColor = 'rgba(0, 255, 240, 0.5)',
+  glowColor = 'rgba(0, 255, 240, 0.4)',
+  cornerPosition = 'top-right',
+  className = ''
+} = Astro.props;
+---
+
+<div
+  class={`contact-info-card group relative rounded-lg p-6 backdrop-blur-sm transition-all duration-300 hover:scale-105 ${className}`}
+  style={`background: ${bgColor}; border: 2px solid ${borderColor};`}
+>
+  <!-- Glow effect -->
+  <GlowEffect color={glowColor} />
+
+  <div class="flex items-start space-x-4 relative">
+    <!-- Icon -->
+    <div
+      class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
+      style={`background: ${bgColor}; border: 2px solid ${iconColor}; box-shadow: 0 0 20px ${glowColor}, inset 0 0 20px ${glowColor};`}
+    >
+      <slot name="icon" />
+    </div>
+
+    <!-- Content -->
+    <div>
+      <h3
+        class="font-orbitron text-lg font-bold mb-2"
+        style={`color: ${iconColor}; text-shadow: 0 0 10px ${glowColor};`}
+      >
+        {title}
+      </h3>
+      <slot name="content" />
+    </div>
+  </div>
+
+  <!-- Corner decoration -->
+  <DecorativeCorners position={cornerPosition} color={iconColor} />
+</div>

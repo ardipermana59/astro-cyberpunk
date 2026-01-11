@@ -1,0 +1,402 @@
+---
+import { NAV_LINKS, SITE_CONFIG } from '../utils/config';
+
+// Get current path to determine active link
+const currentPath = Astro.url.pathname;
+---
+
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between glass-effect rounded-full px-6 py-3">
+      <!-- Logo -->
+      <a href="/" class="font-orbitron text-xl font-bold neon-text-cyan hover:scale-110 transition-transform">
+        {SITE_CONFIG.name.split(' ').map(word => word[0]).join('')}
+      </a>
+
+      <!-- Desktop Navigation -->
+      <ul class="hidden md:flex items-center space-x-6">
+        {NAV_LINKS.map((link) => {
+          const isActive = currentPath === '/' && link.href.startsWith('#') ||
+                          currentPath === link.href ||
+                          (link.href !== '/' && currentPath.startsWith(link.href + '/'));
+
+          return (
+            <li>
+              <a
+                href={link.href}
+                class={`font-rajdhani transition-all duration-300 relative group nav-link ${
+                  isActive ? 'text-cyber-cyan' : 'text-cyber-text'
+                }`}
+              >
+                {link.label}
+                <!-- Neon glow underline -->
+                <span class="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyber-cyan to-cyber-magenta transition-all duration-300 group-hover:w-full neon-underline"
+                      style={isActive ? 'width: 100%' : 'width: 0'}></span>
+                <!-- Glow effect on hover -->
+                <span class="absolute inset-0 rounded transition-all duration-300 opacity-0 group-hover:opacity-100"
+                      style="background: radial-gradient(circle, rgba(0, 255, 240, 0.1) 0%, transparent 70%); filter: blur(8px);"></span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden text-cyber-cyan focus:outline-none cursor-pointer relative p-2 rounded-lg hover:bg-cyber-cyan/10 transition-all duration-300"
+        aria-label="Toggle menu"
+      >
+        <svg
+          id="menu-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7 transition-all duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          style="filter: drop-shadow(0 0 8px rgba(0, 255, 240, 0.6));"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.5"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+        <svg
+          id="close-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7 hidden transition-all duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          style="filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.8));"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.5"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobile-menu-backdrop" class="md:hidden fixed opacity-0 invisible transition-all duration-300 z-40" style="top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden fixed left-0 right-0 top-20 z-50 opacity-0 invisible translate-y-[-20px] transition-all duration-300 px-4">
+      <ul class="glass-effect rounded-lg p-6 space-y-4 border border-cyber-cyan/30 shadow-lg shadow-cyber-cyan/20">
+        {NAV_LINKS.map((link) => {
+          const isActive = currentPath === '/' && link.href.startsWith('#') ||
+                          currentPath === link.href ||
+                          (link.href !== '/' && currentPath.startsWith(link.href + '/'));
+
+          return (
+            <li class="mobile-menu-item">
+              <a
+                href={link.href}
+                class={`block font-rajdhani transition-all duration-300 py-3 px-4 rounded-md relative group mobile-nav-link ${
+                  isActive ? 'text-cyber-cyan' : 'text-cyber-text'
+                }`}
+              >
+                {link.label}
+                <!-- Animated underline with glow -->
+                <span class="absolute bottom-2 left-4 h-0.5 bg-gradient-to-r from-cyber-cyan to-cyber-magenta transition-all duration-300 group-hover:w-[calc(100%-2rem)] neon-underline"
+                      style={isActive ? 'width: calc(100% - 2rem)' : 'width: 0'}></span>
+                <!-- Background glow on hover -->
+                <span class="absolute inset-0 rounded-md transition-all duration-300 opacity-0 group-hover:opacity-100"
+                      style="background: linear-gradient(135deg, rgba(0, 255, 240, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);"></span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  let isMenuOpen = false;
+
+  // Function to open mobile menu
+  function openMobileMenu() {
+    isMenuOpen = true;
+
+    // Show backdrop
+    mobileMenuBackdrop?.classList.remove('invisible', 'opacity-0');
+    mobileMenuBackdrop?.classList.add('visible', 'opacity-100');
+
+    // Show menu with animation
+    mobileMenu?.classList.remove('invisible', 'opacity-0', 'translate-y-[-20px]');
+    mobileMenu?.classList.add('visible', 'opacity-100', 'translate-y-0');
+
+    // Toggle icons
+    menuIcon?.classList.add('hidden');
+    closeIcon?.classList.remove('hidden');
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Function to close mobile menu
+  function closeMobileMenu() {
+    isMenuOpen = false;
+
+    // Hide backdrop
+    mobileMenuBackdrop?.classList.add('invisible', 'opacity-0');
+    mobileMenuBackdrop?.classList.remove('visible', 'opacity-100');
+
+    // Hide menu with animation
+    mobileMenu?.classList.add('invisible', 'opacity-0', 'translate-y-[-20px]');
+    mobileMenu?.classList.remove('visible', 'opacity-100', 'translate-y-0');
+
+    // Toggle icons
+    menuIcon?.classList.remove('hidden');
+    closeIcon?.classList.add('hidden');
+
+    // Restore body scroll
+    document.body.style.overflow = '';
+  }
+
+  // Navbar scroll effect
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll > 100) {
+      navbar?.classList.add('backdrop-blur-md');
+    } else {
+      navbar?.classList.remove('backdrop-blur-md');
+    }
+
+    lastScroll = currentScroll;
+  });
+
+  // Mobile menu toggle button
+  mobileMenuBtn?.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent event from bubbling to backdrop
+    if (isMenuOpen) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+
+  // Click backdrop to close menu
+  mobileMenuBackdrop?.addEventListener('click', () => {
+    closeMobileMenu();
+  });
+
+  // Click anywhere outside menu to close
+  document.addEventListener('click', (e) => {
+    if (isMenuOpen && mobileMenu && mobileMenuBtn) {
+      const target = e.target as Node;
+      // Close if click is outside menu and menu button
+      if (!mobileMenu.contains(target) && !mobileMenuBtn.contains(target)) {
+        closeMobileMenu();
+      }
+    }
+  });
+
+  // Prevent clicks inside menu from closing it
+  mobileMenu?.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // Close mobile menu when clicking on a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
+  });
+
+  // Close menu on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) {
+      closeMobileMenu();
+    }
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const href = (this as HTMLAnchorElement).getAttribute('href');
+      if (href) {
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  nav {
+    backdrop-filter: blur(0px);
+    transition: backdrop-filter 0.3s ease;
+  }
+
+  nav.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+  }
+
+  /* Enhanced navbar link hover effects */
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 0;
+  }
+
+  .nav-link:hover {
+    color: var(--cyber-cyan);
+    text-shadow:
+      0 0 10px rgba(0, 255, 240, 0.8),
+      0 0 20px rgba(0, 255, 240, 0.6),
+      0 0 30px rgba(0, 255, 240, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* Neon underline glow */
+  .neon-underline {
+    box-shadow:
+      0 0 5px rgba(0, 255, 240, 0.8),
+      0 0 10px rgba(0, 255, 240, 0.6),
+      0 0 15px rgba(255, 0, 255, 0.4);
+  }
+
+  .nav-link:hover .neon-underline,
+  .mobile-nav-link:hover .neon-underline {
+    animation: neonPulse 1.5s ease-in-out infinite;
+  }
+
+  /* Mobile navigation link hover effects */
+  .mobile-nav-link:hover {
+    color: var(--cyber-cyan);
+    text-shadow:
+      0 0 8px rgba(0, 255, 240, 0.6),
+      0 0 15px rgba(0, 255, 240, 0.4);
+  }
+
+  /* Mobile menu button styling */
+  #mobile-menu-btn {
+    z-index: 60;
+  }
+
+  #mobile-menu-btn:hover {
+    transform: scale(1.1);
+  }
+
+  #mobile-menu-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Close icon animation */
+  #close-icon:not(.hidden) {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.8));
+    }
+    50% {
+      filter: drop-shadow(0 0 20px rgba(255, 0, 255, 1)) drop-shadow(0 0 30px rgba(0, 255, 240, 0.6));
+    }
+  }
+
+  @keyframes neonPulse {
+    0%, 100% {
+      box-shadow:
+        0 0 5px rgba(0, 255, 240, 0.8),
+        0 0 10px rgba(0, 255, 240, 0.6),
+        0 0 15px rgba(255, 0, 255, 0.4);
+    }
+    50% {
+      box-shadow:
+        0 0 10px rgba(0, 255, 240, 1),
+        0 0 20px rgba(0, 255, 240, 0.8),
+        0 0 30px rgba(255, 0, 255, 0.6);
+    }
+  }
+
+  /* Mobile menu backdrop animations */
+  #mobile-menu-backdrop {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  #mobile-menu-backdrop.visible {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Mobile menu animations */
+  #mobile-menu {
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+
+  #mobile-menu.visible {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Staggered animation for menu items */
+  .mobile-menu-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInFromLeft 0.4s ease forwards;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(4) {
+    animation-delay: 0.25s;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(5) {
+    animation-delay: 0.3s;
+  }
+
+  #mobile-menu.visible .mobile-menu-item:nth-child(6) {
+    animation-delay: 0.35s;
+  }
+
+  @keyframes slideInFromLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+</style>

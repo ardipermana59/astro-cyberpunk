@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center' | 'right';
+  titleClass?: string;
+  subtitleClass?: string;
+  containerClass?: string;
+}
+
+const {
+  title,
+  subtitle,
+  align = 'center',
+  titleClass = '',
+  subtitleClass = '',
+  containerClass = ''
+} = Astro.props;
+
+const alignClasses = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right'
+};
+---
+
+<div class={`mb-16 ${alignClasses[align]} ${containerClass}`} data-aos="fade-up">
+  <h2 class={`font-orbitron text-4xl md:text-5xl font-bold neon-text-cyan mb-4 ${titleClass}`}>
+    {title}
+  </h2>
+  {subtitle && (
+    <p class={`text-cyber-text/60 text-lg max-w-2xl ${align === 'center' ? 'mx-auto' : ''} ${subtitleClass}`}>
+      {subtitle}
+    </p>
+  )}
+</div>

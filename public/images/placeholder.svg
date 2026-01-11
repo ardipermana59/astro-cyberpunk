@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#0a0f1c"/>
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#00fff0" stroke-width="2" stroke-dasharray="10,5"/>
+  <text x="400" y="280" font-family="Orbitron, sans-serif" font-size="32" font-weight="bold" fill="#00fff0" text-anchor="middle">
+    PLACEHOLDER IMAGE
+  </text>
+  <text x="400" y="320" font-family="Rajdhani, sans-serif" font-size="20" fill="#e0e0e0" text-anchor="middle">
+    800 x 600
+  </text>
+  <text x="400" y="350" font-family="Rajdhani, sans-serif" font-size="16" fill="#ff00ff" text-anchor="middle">
+    Replace with your own image
+  </text>
+</svg>

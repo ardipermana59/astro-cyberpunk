@@ -1,0 +1,117 @@
+---
+import GlassCard from '../GlassCard.astro';
+import SectionDivider from '../SectionDivider.astro';
+import SectionTitle from '../SectionTitle.astro';
+import IconCard from '../IconCard.astro';
+import DecorativeCorners from '../DecorativeCorners.astro';
+import ServiceCard from '../ServiceCard.astro';
+import { SITE_CONFIG, SERVICES } from '../../utils/config';
+---
+
+<section id="about" class="py-10">
+  <div class="container mx-auto px-4">
+    <SectionDivider />
+
+    <!-- Section Title -->
+    <SectionTitle
+      title="About Me"
+      subtitle="Exploring the intersection of technology, security, and innovation"
+    />
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+      <!-- Profile Image -->
+      <div class="flex justify-center lg:justify-end" data-aos="fade-right">
+        <div class="relative">
+          <div class="w-72 h-72 md:w-96 md:h-96 rounded-lg overflow-hidden hologram-effect border-2 border-cyber-cyan">
+            <img
+              src={SITE_CONFIG.avatar}
+              alt={SITE_CONFIG.name}
+              class="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <!-- Decorative corner elements -->
+          <DecorativeCorners
+            position="all"
+            colorTop="var(--cyber-cyan)"
+            colorRight="var(--cyber-magenta)"
+            colorBottom="var(--cyber-cyan)"
+            colorLeft="var(--cyber-magenta)"
+            size="w-8 h-8"
+            className="-top-4 -left-4"
+          />
+        </div>
+      </div>
+
+      <!-- About Content -->
+      <div class="space-y-6" data-aos="fade-left">
+        <h3 class="font-orbitron text-2xl md:text-3xl font-bold text-cyber-cyan">
+          Full-Stack Developer & Security Enthusiast
+        </h3>
+        <p class="text-cyber-text/80 text-lg leading-relaxed">
+          I'm a passionate developer with a strong focus on building secure, scalable, and innovative
+          web applications. With expertise spanning from frontend frameworks to backend systems,
+          blockchain technology, and cybersecurity, I bring a holistic approach to every project.
+        </p>
+        <p class="text-cyber-text/80 text-lg leading-relaxed">
+          My journey in tech has led me through the exciting worlds of cryptography, ethical hacking,
+          and decentralized systems. I believe in creating solutions that not only work beautifully
+          but also protect users' data and privacy.
+        </p>
+
+        <div class="flex flex-wrap gap-4 pt-4">
+          <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyber-cyan" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-cyber-text/80">{SITE_CONFIG.location}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyber-cyan" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+            <a href={`mailto:${SITE_CONFIG.email}`} class="text-cyber-cyan hover:text-cyber-magenta transition-colors">
+              {SITE_CONFIG.email}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What I Do -->
+    <div class="mb-16" data-aos="fade-up">
+      <SectionTitle
+        title="What I Do"
+        containerClass="mb-12"
+      />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {SERVICES.map((service, index) => {
+          // Define color schemes for each service
+          const colors = [
+            { bg: 'rgba(0, 255, 240, 0.1)', border: 'rgba(0, 255, 240, 0.5)', icon: '#00fff0', glow: 'rgba(0, 255, 240, 0.4)', name: 'cyan' },
+            { bg: 'rgba(255, 0, 255, 0.1)', border: 'rgba(255, 0, 255, 0.5)', icon: '#ff00ff', glow: 'rgba(255, 0, 255, 0.4)', name: 'magenta' },
+            { bg: 'rgba(0, 255, 127, 0.1)', border: 'rgba(0, 255, 127, 0.5)', icon: '#00ff7f', glow: 'rgba(0, 255, 127, 0.4)', name: 'green' },
+            { bg: 'rgba(255, 215, 0, 0.1)', border: 'rgba(255, 215, 0, 0.5)', icon: '#ffd700', glow: 'rgba(255, 215, 0, 0.4)', name: 'gold' }
+          ];
+          const color = colors[index % colors.length];
+
+          return (
+            <ServiceCard
+              title={service.title}
+              description={service.description}
+              icon={service.icon}
+              iconColor={color.icon}
+              bgColor={color.bg}
+              borderColor={color.border}
+              glowColor={color.glow}
+              delay={index * 100}
+            />
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>

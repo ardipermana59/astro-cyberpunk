@@ -1,0 +1,79 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0f1c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1f2e;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00fff0" stroke-width="0.5" opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Decorative corners -->
+  <path d="M 50 50 L 150 50 M 50 50 L 50 150" stroke="#00fff0" stroke-width="3" fill="none" filter="url(#glow)"/>
+  <path d="M 1150 50 L 1050 50 M 1150 50 L 1150 150" stroke="#ff00ff" stroke-width="3" fill="none" filter="url(#glow)"/>
+  <path d="M 50 580 L 150 580 M 50 580 L 50 480" stroke="#ff00ff" stroke-width="3" fill="none" filter="url(#glow)"/>
+  <path d="M 1150 580 L 1050 580 M 1150 580 L 1150 480" stroke="#00fff0" stroke-width="3" fill="none" filter="url(#glow)"/>
+  
+  <!-- Main content -->
+  <text x="600" y="220" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#00fff0" text-anchor="middle" filter="url(#glow)">
+    CYBERPUNK PORTFOLIO
+  </text>
+  
+  <text x="600" y="290" font-family="Arial, sans-serif" font-size="36" fill="#e0e0e0" text-anchor="middle">
+    Full-Stack Developer • Blockchain Enthusiast
+  </text>
+  
+  <text x="600" y="340" font-family="Arial, sans-serif" font-size="36" fill="#e0e0e0" text-anchor="middle">
+    Security Researcher
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="28" fill="#ff00ff" text-anchor="middle" filter="url(#glow)">
+    Modern Web Development with Futuristic Design
+  </text>
+  
+  <!-- Tech stack badges -->
+  <g transform="translate(300, 480)">
+    <rect width="120" height="40" rx="20" fill="none" stroke="#00fff0" stroke-width="2" opacity="0.5"/>
+    <text x="60" y="27" font-family="Arial, sans-serif" font-size="18" fill="#00fff0" text-anchor="middle">Astro</text>
+  </g>
+  
+  <g transform="translate(440, 480)">
+    <rect width="140" height="40" rx="20" fill="none" stroke="#00fff0" stroke-width="2" opacity="0.5"/>
+    <text x="70" y="27" font-family="Arial, sans-serif" font-size="18" fill="#00fff0" text-anchor="middle">TailwindCSS</text>
+  </g>
+  
+  <g transform="translate(600, 480)">
+    <rect width="140" height="40" rx="20" fill="none" stroke="#ff00ff" stroke-width="2" opacity="0.5"/>
+    <text x="70" y="27" font-family="Arial, sans-serif" font-size="18" fill="#ff00ff" text-anchor="middle">TypeScript</text>
+  </g>
+  
+  <g transform="translate(760, 480)">
+    <rect width="120" height="40" rx="20" fill="none" stroke="#ff00ff" stroke-width="2" opacity="0.5"/>
+    <text x="60" y="27" font-family="Arial, sans-serif" font-size="18" fill="#ff00ff" text-anchor="middle">MDX</text>
+  </g>
+  
+  <!-- Particles effect (decorative circles) -->
+  <circle cx="200" cy="150" r="3" fill="#00fff0" opacity="0.6"/>
+  <circle cx="350" cy="100" r="2" fill="#ff00ff" opacity="0.4"/>
+  <circle cx="950" cy="200" r="3" fill="#00fff0" opacity="0.5"/>
+  <circle cx="1100" cy="400" r="2" fill="#ff00ff" opacity="0.6"/>
+  <circle cx="100" cy="400" r="2" fill="#00fff0" opacity="0.4"/>
+  <circle cx="250" cy="500" r="3" fill="#ff00ff" opacity="0.5"/>
+</svg>

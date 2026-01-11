@@ -1,0 +1,26 @@
+---
+interface Props {
+  class?: string;
+  hover?: boolean;
+  glow?: boolean;
+}
+
+const { class: className = '', hover = true, glow = false } = Astro.props;
+---
+
+<div
+  class={`glass-effect rounded-lg p-6 ${hover ? 'tilt-3d hover:border-cyber-cyan' : ''} ${glow ? 'glow-pulse' : ''} ${className}`}
+  data-glass-card
+>
+  <slot />
+</div>
+
+<style>
+  [data-glass-card] {
+    transition: all 0.3s ease;
+  }
+
+  [data-glass-card]:hover {
+    transform: translateY(-5px);
+  }
+</style>

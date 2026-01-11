@@ -1,0 +1,126 @@
+---
+import SectionDivider from '../SectionDivider.astro';
+import SectionTitle from '../SectionTitle.astro';
+import { SKILLS } from '../../utils/config';
+
+// Group skills by category
+const groupedSkills = SKILLS.reduce((acc, skill) => {
+  if (!acc[skill.category]) {
+    acc[skill.category] = [];
+  }
+  acc[skill.category].push(skill);
+  return acc;
+}, {} as Record<string, typeof SKILLS>);
+---
+
+<section id="skills" class="py-10 relative">
+  <div class="container mx-auto px-4">
+    <SectionDivider />
+
+    <!-- Section Title -->
+    <SectionTitle
+      title="Skills & Expertise"
+      subtitle="Technologies and tools I use to bring ideas to life"
+    />
+
+    <!-- Skills Progress Bars - Two Columns -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+      {SKILLS.map((skill, index) => (
+        <div class="skill-item" data-aos="fade-up" data-aos-delay={index * 50}>
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="font-rajdhani text-lg font-semibold text-cyber-text">
+              {skill.name}
+            </h3>
+            <span class="font-orbitron text-sm text-cyber-cyan skill-percentage" data-level={skill.level}>
+              0%
+            </span>
+          </div>
+
+          <div class="relative h-3 rounded-full overflow-hidden border" style="background-color: var(--cyber-gray); border-color: rgba(0, 255, 240, 0.3);">
+            <!-- Background glow -->
+            <div class="absolute inset-0 animate-pulse" style="background: linear-gradient(to right, transparent, rgba(0, 255, 240, 0.1), transparent);"></div>
+
+            <!-- Progress bar -->
+            <div
+              class="skill-progress absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-out"
+              style="width: 0%"
+              data-level={skill.level}
+            >
+              <div class="h-full w-full relative overflow-hidden" style="background: linear-gradient(to right, var(--cyber-cyan), var(--cyber-magenta));">
+                <!-- Animated shine effect -->
+                <div class="absolute inset-0 animate-shimmer" style="background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+  </div>
+</section>
+
+<script>
+  // Animate skill bars when they come into view
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const skillItem = entry.target as HTMLElement;
+          const progressBar = skillItem.querySelector('.skill-progress') as HTMLElement;
+          const percentage = skillItem.querySelector('.skill-percentage') as HTMLElement;
+
+          if (progressBar && percentage) {
+            const level = parseInt(progressBar.dataset.level || '0');
+
+            // Animate width
+            setTimeout(() => {
+              progressBar.style.width = `${level}%`;
+            }, 100);
+
+            // Animate percentage number
+            let current = 0;
+            const increment = level / 50; // Adjust speed
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= level) {
+                current = level;
+                clearInterval(timer);
+              }
+              percentage.textContent = `${Math.round(current)}%`;
+            }, 20);
+          }
+
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    }
+  );
+
+  // Observe all skill items
+  document.querySelectorAll('.skill-item').forEach((item) => {
+    observer.observe(item);
+  });
+</script>
+
+<style>
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .skill-progress {
+    box-shadow: 0 0 20px rgba(0, 255, 240, 0.5),
+                inset 0 0 20px rgba(0, 255, 240, 0.2);
+  }
+</style>

@@ -1,0 +1,869 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SectionDivider from '../components/SectionDivider.astro';
+import { formatDate } from '../utils/content';
+import { SITE_CONFIG } from '../utils/config';
+
+const { frontmatter } = Astro.props;
+
+// Determine if this is a blog post or portfolio item
+const isBlog = Astro.url.pathname.startsWith('/blog/');
+const isPortfolio = Astro.url.pathname.startsWith('/portfolio/');
+
+// Generate keywords from tags
+const keywords = frontmatter.tags
+  ? `${frontmatter.tags.join(', ')}, ${SITE_CONFIG.name}, ${isBlog ? 'blog, article' : 'portfolio, project'}`
+  : `${SITE_CONFIG.name}, ${isBlog ? 'blog, article' : 'portfolio, project'}`;
+
+// Set content type
+const contentType = isBlog ? 'article' : 'website';
+---
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.summary}
+  image={frontmatter.image}
+  author={SITE_CONFIG.name}
+  keywords={keywords}
+  type={contentType}
+  publishedTime={frontmatter.date}
+>
+  <article class="py-10 md:py-16">
+    <div class="container mx-auto px-4">
+      <!-- Back Button - Outside card for easy access -->
+      <div class="max-w-5xl mx-auto mb-6">
+        <button
+          onclick="history.back()"
+          class="flex items-center gap-2 text-cyber-cyan hover:text-cyber-magenta transition-all duration-300 mb-4 group cursor-pointer px-4 py-2 rounded-lg hover:bg-cyber-cyan/10"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="font-rajdhani">Back</span>
+        </button>
+      </div>
+
+      <!-- Main Content Card -->
+      <div class="max-w-5xl mx-auto">
+        <!-- Header Card -->
+        <header class="glass-effect rounded-2xl overflow-hidden border-2 border-cyber-cyan/30 mb-8 shadow-lg shadow-cyber-cyan/10" data-aos="fade-up">
+          <!-- Featured Image -->
+          <div class="relative h-72 md:h-96 overflow-hidden">
+            <img
+              src={frontmatter.image}
+              alt={frontmatter.title}
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-cyber-dark via-cyber-dark/40 to-transparent"></div>
+
+            <!-- Title Overlay on Image -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+              <h1 class="font-orbitron text-3xl md:text-5xl font-bold neon-text-cyan mb-3 drop-shadow-lg">
+                {frontmatter.title}
+              </h1>
+
+              <!-- Meta Info on Image -->
+              <div class="flex flex-wrap items-center gap-4 text-cyber-text/90 text-sm md:text-base">
+                <div class="flex items-center gap-2 bg-cyber-dark/50 px-3 py-1.5 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <time>{formatDate(frontmatter.date)}</time>
+                </div>
+
+                {frontmatter.demoUrl && (
+                  <a
+                    href={frontmatter.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 px-3 py-1.5 rounded-lg border border-cyber-cyan/30 text-cyber-cyan hover:text-cyber-magenta transition-all duration-300 hover:shadow-lg hover:shadow-cyber-cyan/20"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span class="font-rajdhani">Live Demo</span>
+                  </a>
+                )}
+
+                {frontmatter.githubUrl && (
+                  <a
+                    href={frontmatter.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 px-3 py-1.5 rounded-lg border border-cyber-cyan/30 text-cyber-cyan hover:text-cyber-magenta transition-all duration-300 hover:shadow-lg hover:shadow-cyber-cyan/20"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    <span class="font-rajdhani">View Code</span>
+                  </a>
+                )}
+              </div>
+
+              <!-- Tags -->
+              {frontmatter.tags && frontmatter.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2 mt-4">
+                  {frontmatter.tags.map((tag: string) => (
+                    <span class="px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs md:text-sm font-rajdhani backdrop-blur-sm">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        <!-- Content Card -->
+        <div class="glass-effect rounded-2xl overflow-hidden border-2 border-cyber-cyan/20 p-6 md:p-10 shadow-lg shadow-cyber-cyan/5" data-aos="fade-up" data-aos-delay="100">
+          <div class="prose prose-invert prose-lg max-w-none">
+            <slot />
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  /* ========== START: Prose Base Styles ========== */
+  .prose {
+    color: #e0e0e0;
+    font-size: 1.125rem;
+    line-height: 1.9;
+  }
+
+  @media (max-width: 768px) {
+    .prose {
+      font-size: 1rem;
+    }
+  }
+  /* ========== END: Prose Base Styles ========== */
+
+  /* ========== START: Typography - Headings ========== */
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    color: #00fff0;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+    line-height: 1.3;
+    scroll-margin-top: 100px;
+  }
+
+  .prose h1 {
+    font-size: 2.5em;
+  }
+
+  .prose h2 {
+    font-size: 2em;
+    border-bottom: 2px solid rgba(0, 255, 240, 0.3);
+    padding-bottom: 0.5em;
+    margin-top: 2em;
+  }
+
+  .prose h3 {
+    font-size: 1.5em;
+    margin-top: 2em;
+  }
+
+  .prose h4 {
+    font-size: 1.25em;
+  }
+
+  /* First heading shouldn't have top margin */
+  .prose > h1:first-child,
+  .prose > h2:first-child,
+  .prose > h3:first-child {
+    margin-top: 0;
+  }
+  /* ========== END: Typography - Headings ========== */
+
+  /* ========== START: Typography - Paragraphs & Links ========== */
+  .prose p {
+    margin-bottom: 1.75em;
+    line-height: 1.9;
+    color: rgba(224, 224, 224, 0.95);
+  }
+
+  .prose strong {
+    color: #00fff0;
+    font-weight: 600;
+  }
+
+  .prose em {
+    color: rgba(224, 224, 224, 0.9);
+  }
+
+  .prose a {
+    color: #00fff0;
+    text-decoration: none;
+    transition: all 0.3s;
+    border-bottom: 1px solid rgba(0, 255, 240, 0.3);
+    padding-bottom: 2px;
+  }
+
+  .prose a:hover {
+    color: #ff00ff;
+    border-bottom-color: rgba(255, 0, 255, 0.5);
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.3);
+  }
+  /* ========== END: Typography - Paragraphs & Links ========== */
+
+  /* ========== START: Code Blocks - Inline Code ========== */
+  .prose code {
+    background: rgba(10, 15, 28, 0.7);
+    border: 1px solid rgba(0, 255, 240, 0.3);
+    border-radius: 0.25rem;
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+    color: #00fff0;
+  }
+  /* ========== END: Code Blocks - Inline Code ========== */
+
+  /* ========== START: Code Blocks - Pre/Code ========== */
+  .prose pre {
+    background: rgba(10, 15, 28, 0.7) !important;
+    border: 2px solid rgba(0, 255, 240, 0.3);
+    border-radius: 0.5rem;
+    padding: 1.5em;
+    overflow-x: auto;
+    margin: 2em 0;
+  }
+
+  .prose pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+  }
+  /* ========== END: Code Blocks - Pre/Code ========== */
+
+  /* ========== START: Lists ========== */
+  .prose ul, .prose ol {
+    margin: 2em 0;
+    padding-left: 2em;
+  }
+
+  .prose li {
+    margin: 0.75em 0;
+    line-height: 1.8;
+    color: rgba(224, 224, 224, 0.95);
+  }
+
+  .prose ul > li {
+    position: relative;
+    padding-left: 0.5em;
+  }
+
+  .prose ul > li::marker {
+    color: #00fff0;
+  }
+
+  .prose ol > li::marker {
+    color: #00fff0;
+    font-weight: 600;
+  }
+
+  /* Nested lists */
+  .prose li > ul,
+  .prose li > ol {
+    margin: 0.75em 0;
+  }
+  /* ========== END: Lists ========== */
+
+  /* ========== START: Blockquote ========== */
+  .prose blockquote {
+    border-left: 4px solid #00fff0;
+    background: rgba(0, 255, 240, 0.05);
+    padding: 1.25em 1.5em;
+    margin: 2.5em 0;
+    font-style: italic;
+    color: rgba(224, 224, 224, 0.85);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 255, 240, 0.1);
+  }
+
+  .prose blockquote p {
+    margin-bottom: 0.75em;
+  }
+
+  .prose blockquote p:last-child {
+    margin-bottom: 0;
+  }
+  /* ========== END: Blockquote ========== */
+
+  /* ========== START: Images & Captions ========== */
+  .prose img {
+    border-radius: 0.5rem;
+    border: 2px solid rgba(0, 255, 240, 0.3);
+    margin: 2em auto;
+    display: block;
+    max-width: 100%;
+  }
+
+  .prose figure {
+    margin: 2em 0;
+  }
+
+  .prose figcaption {
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgba(224, 224, 224, 0.6);
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+  /* ========== END: Images & Captions ========== */
+
+  /* ========== START: Horizontal Rule ========== */
+  .prose hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(0, 255, 240, 0.5), transparent);
+    margin: 3em 0;
+  }
+  /* ========== END: Horizontal Rule ========== */
+
+  /* ========== START: Tables ========== */
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2.5em 0;
+    background: rgba(10, 15, 28, 0.3);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .prose th, .prose td {
+    border: 1px solid rgba(0, 255, 240, 0.2);
+    padding: 1em 1.25em;
+    text-align: left;
+  }
+
+  .prose th {
+    background: rgba(0, 255, 240, 0.15);
+    color: #00fff0;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+  }
+
+  .prose tbody tr {
+    transition: background-color 0.2s;
+  }
+
+  .prose tbody tr:hover {
+    background: rgba(0, 255, 240, 0.05);
+  }
+
+  .prose tbody tr:nth-child(even) {
+    background: rgba(0, 255, 240, 0.02);
+  }
+  /* ========== END: Tables ========== */
+
+  /* ========== START: YouTube Embed ========== */
+  .prose .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 2em 0;
+    border: 2px solid rgba(0, 255, 240, 0.3);
+    border-radius: 0.5rem;
+  }
+
+  .prose .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  /* ========== END: YouTube Embed ========== */
+
+  /* ========== START: Audio Player ========== */
+  .prose audio {
+    width: 100%;
+    margin: 2em 0;
+    border-radius: 0.5rem;
+  }
+  /* ========== END: Audio Player ========== */
+
+  /* ========== START: Copy Button - Wrapper ========== */
+  .code-block-wrapper {
+    position: relative;
+    margin: 2em 0;
+  }
+  /* ========== END: Copy Button - Wrapper ========== */
+
+  /* ========== START: Copy Button - Styles ========== */
+  .copy-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 255, 240, 0.1);
+    border: 1px solid rgba(0, 255, 240, 0.3);
+    border-radius: 0.375rem;
+    color: #00fff0;
+    font-size: 0.875rem;
+    font-family: 'Rajdhani', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+  }
+
+  .copy-button:hover {
+    background: rgba(0, 255, 240, 0.2);
+    border-color: rgba(0, 255, 240, 0.6);
+    box-shadow: 0 0 15px rgba(0, 255, 240, 0.4);
+  }
+
+  .copy-button.copied {
+    background: rgba(255, 0, 255, 0.2);
+    border-color: rgba(255, 0, 255, 0.6);
+    color: #ff00ff;
+  }
+
+  .copy-button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+  /* ========== END: Copy Button - Styles ========== */
+
+  /* ========== START: Lightbox - Overlay ========== */
+  .lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .lightbox-overlay.active {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  /* ========== END: Lightbox - Overlay ========== */
+
+  /* ========== START: Lightbox - Content ========== */
+  .lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease-in-out;
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  /* ========== END: Lightbox - Content ========== */
+
+  /* ========== START: Lightbox - Close Button ========== */
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10000;
+  }
+
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: rotate(90deg);
+  }
+  /* ========== END: Lightbox - Close Button ========== */
+
+  /* ========== START: Lightbox - Navigation Buttons ========== */
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10000;
+  }
+
+  .lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .lightbox-nav.prev {
+    left: 20px;
+  }
+
+  .lightbox-nav.next {
+    right: 20px;
+  }
+
+  .lightbox-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .lightbox-nav:disabled:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  /* ========== END: Lightbox - Navigation Buttons ========== */
+
+  /* ========== START: Lightbox - Image Counter ========== */
+  .lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: #ffffff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+  }
+  /* ========== END: Lightbox - Image Counter ========== */
+
+  /* ========== START: Clickable Images Cursor ========== */
+  .prose img {
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .prose img:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+  /* ========== END: Clickable Images Cursor ========== */
+</style>
+
+<script>
+  /* ========== START: Copy Button Functionality ========== */
+
+  // Add copy buttons to all code blocks
+  function addCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.prose pre');
+
+    codeBlocks.forEach((block) => {
+      /* --- START: Create Wrapper --- */
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+
+      // Wrap the pre element
+      if (block.parentNode) {
+        block.parentNode.insertBefore(wrapper, block);
+        wrapper.appendChild(block);
+      }
+      /* --- END: Create Wrapper --- */
+
+      /* --- START: Create Copy Button --- */
+      const button = document.createElement('button');
+      button.className = 'copy-button';
+      button.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        <span>Copy</span>
+      `;
+      /* --- END: Create Copy Button --- */
+
+      /* --- START: Copy Click Handler --- */
+      button.addEventListener('click', async () => {
+        const code = block.querySelector('code');
+        if (!code) return;
+
+        const text = code.textContent || '';
+
+        try {
+          // Copy to clipboard
+          await navigator.clipboard.writeText(text);
+
+          // Update button to "Copied" state
+          button.classList.add('copied');
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copied!</span>
+          `;
+
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            button.classList.remove('copied');
+            button.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Copy</span>
+            `;
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      });
+      /* --- END: Copy Click Handler --- */
+
+      wrapper.appendChild(button);
+    });
+  }
+
+  /* --- START: Initialize on DOM Ready --- */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addCopyButtons);
+  } else {
+    addCopyButtons();
+  }
+  /* --- END: Initialize on DOM Ready --- */
+
+  /* ========== END: Copy Button Functionality ========== */
+
+  /* ========== START: Lightbox Functionality ========== */
+
+  // Lightbox state
+  let currentImageIndex = 0;
+  let images: HTMLImageElement[] = [];
+  let lightboxOverlay: HTMLElement | null = null;
+  let lightboxImage: HTMLImageElement | null = null;
+  let lightboxCounter: HTMLElement | null = null;
+  let prevButton: HTMLButtonElement | null = null;
+  let nextButton: HTMLButtonElement | null = null;
+
+  /* --- START: Create Lightbox HTML --- */
+  function createLightbox() {
+    // Create overlay
+    lightboxOverlay = document.createElement('div');
+    lightboxOverlay.className = 'lightbox-overlay';
+    lightboxOverlay.innerHTML = `
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-nav prev" aria-label="Previous image">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <img class="lightbox-image" src="" alt="" />
+        <button class="lightbox-nav next" aria-label="Next image">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div class="lightbox-counter"></div>
+      </div>
+    `;
+
+    document.body.appendChild(lightboxOverlay);
+
+    // Get elements
+    lightboxImage = lightboxOverlay.querySelector('.lightbox-image');
+    lightboxCounter = lightboxOverlay.querySelector('.lightbox-counter');
+    prevButton = lightboxOverlay.querySelector('.lightbox-nav.prev');
+    nextButton = lightboxOverlay.querySelector('.lightbox-nav.next');
+    const closeButton = lightboxOverlay.querySelector('.lightbox-close');
+
+    // Add event listeners
+    closeButton?.addEventListener('click', closeLightbox);
+    lightboxOverlay.addEventListener('click', (e) => {
+      if (e.target === lightboxOverlay) closeLightbox();
+    });
+    prevButton?.addEventListener('click', showPrevImage);
+    nextButton?.addEventListener('click', showNextImage);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', handleKeyPress);
+  }
+  /* --- END: Create Lightbox HTML --- */
+
+  /* --- START: Open Lightbox --- */
+  function openLightbox(index: number) {
+    if (!lightboxOverlay || !lightboxImage || !lightboxCounter) return;
+
+    currentImageIndex = index;
+    const img = images[currentImageIndex];
+
+    lightboxImage.src = img.src;
+    lightboxImage.alt = img.alt;
+    lightboxCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+
+    // Update button states
+    updateNavigationButtons();
+
+    lightboxOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  /* --- END: Open Lightbox --- */
+
+  /* --- START: Close Lightbox --- */
+  function closeLightbox() {
+    if (!lightboxOverlay) return;
+
+    lightboxOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  /* --- END: Close Lightbox --- */
+
+  /* --- START: Show Previous Image --- */
+  function showPrevImage() {
+    if (currentImageIndex > 0) {
+      openLightbox(currentImageIndex - 1);
+    }
+  }
+  /* --- END: Show Previous Image --- */
+
+  /* --- START: Show Next Image --- */
+  function showNextImage() {
+    if (currentImageIndex < images.length - 1) {
+      openLightbox(currentImageIndex + 1);
+    }
+  }
+  /* --- END: Show Next Image --- */
+
+  /* --- START: Update Navigation Buttons --- */
+  function updateNavigationButtons() {
+    if (!prevButton || !nextButton) return;
+
+    // Disable prev button if at first image
+    if (currentImageIndex === 0) {
+      prevButton.disabled = true;
+    } else {
+      prevButton.disabled = false;
+    }
+
+    // Disable next button if at last image
+    if (currentImageIndex === images.length - 1) {
+      nextButton.disabled = true;
+    } else {
+      nextButton.disabled = false;
+    }
+
+    // Hide navigation if only one image
+    if (images.length <= 1) {
+      prevButton.style.display = 'none';
+      nextButton.style.display = 'none';
+    } else {
+      prevButton.style.display = 'flex';
+      nextButton.style.display = 'flex';
+    }
+  }
+  /* --- END: Update Navigation Buttons --- */
+
+  /* --- START: Handle Keyboard Press --- */
+  function handleKeyPress(e: KeyboardEvent) {
+    if (!lightboxOverlay?.classList.contains('active')) return;
+
+    switch (e.key) {
+      case 'Escape':
+        closeLightbox();
+        break;
+      case 'ArrowLeft':
+        showPrevImage();
+        break;
+      case 'ArrowRight':
+        showNextImage();
+        break;
+    }
+  }
+  /* --- END: Handle Keyboard Press --- */
+
+  /* --- START: Initialize Lightbox --- */
+  function initializeLightbox() {
+    // Get all images in prose content (excluding those in figures to avoid duplicates)
+    const proseImages = document.querySelectorAll<HTMLImageElement>('.prose img');
+    images = Array.from(proseImages);
+
+    // Filter out images that shouldn't be clickable (like logos, icons, etc.)
+    images = images.filter(img => {
+      // Skip images in code blocks or other non-content areas
+      const parent = img.closest('pre, code');
+      return !parent;
+    });
+
+    if (images.length === 0) return;
+
+    // Create lightbox HTML
+    createLightbox();
+
+    // Add click handlers to images
+    images.forEach((img, index) => {
+      img.addEventListener('click', () => openLightbox(index));
+      img.style.cursor = 'pointer';
+    });
+  }
+  /* --- END: Initialize Lightbox --- */
+
+  /* --- START: Initialize on DOM Ready --- */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeLightbox();
+    });
+  } else {
+    initializeLightbox();
+  }
+  /* --- END: Initialize on DOM Ready --- */
+
+  /* ========== END: Lightbox Functionality ========== */
+</script>

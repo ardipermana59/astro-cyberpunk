@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortfolioCard from '../../components/PortfolioCard.astro';
+import SectionDivider from '../../components/SectionDivider.astro';
+import { getPortfolioProjects, getPortfolioTags } from '../../utils/content';
+import { SITE_CONFIG } from '../../utils/config';
+
+const projects = await getPortfolioProjects();
+const tags = await getPortfolioTags();
+---
+
+<BaseLayout
+  title="Portfolio"
+  description={`Explore portfolio of web development, blockchain, and security projects by ${SITE_CONFIG.name}`}
+  keywords={`portfolio, projects, ${tags.join(', ')}, web development, ${SITE_CONFIG.name}`}
+  type="website"
+>
+  <section class="py-10">
+    <div class="container mx-auto px-4">
+      <SectionDivider />
+
+      <!-- Header -->
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h1 class="font-orbitron text-5xl md:text-6xl font-bold neon-text-cyan mb-4">
+          Portfolio
+        </h1>
+        <p class="text-cyber-text/60 text-lg max-w-2xl mx-auto">
+          A showcase of my recent projects and technical achievements
+        </p>
+      </div>
+
+      <!-- Filter Tags -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+        <button
+          class="filter-btn active px-4 py-2 rounded-full border-2 border-cyber-cyan text-cyber-cyan font-rajdhani transition-all duration-300 hover:bg-cyber-cyan hover:text-cyber-dark cursor-pointer"
+          data-filter="all"
+        >
+          All Projects
+        </button>
+        {tags.map((tag) => (
+          <button
+            class="filter-btn px-4 py-2 rounded-full border-2 border-cyber-cyan/30 text-cyber-text/80 font-rajdhani transition-all duration-300 hover:border-cyber-cyan hover:text-cyber-cyan cursor-pointer"
+            data-filter={tag}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+        {projects.map((project, index) => (
+          <div class="portfolio-item" data-tags={project.tags.join(',')}>
+            <PortfolioCard project={project} index={index} />
+          </div>
+        ))}
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="hidden text-center py-10">
+        <div class="text-cyber-cyan text-6xl mb-4">🔍</div>
+        <h3 class="font-orbitron text-2xl text-cyber-text mb-2">No projects found</h3>
+        <p class="text-cyber-text/60">Try selecting a different category</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const portfolioItems = document.querySelectorAll('.portfolio-item');
+  const noResults = document.getElementById('no-results');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+
+      // Update active button
+      filterBtns.forEach((b) => b.classList.remove('active', 'bg-cyber-cyan', 'text-cyber-dark'));
+      btn.classList.add('active', 'bg-cyber-cyan', 'text-cyber-dark');
+
+      // Filter items
+      let visibleCount = 0;
+      portfolioItems.forEach((item) => {
+        const tags = item.getAttribute('data-tags') || '';
+        const shouldShow = filter === 'all' || tags.includes(filter);
+
+        if (shouldShow) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      // Show/hide no results message
+      if (visibleCount === 0) {
+        noResults?.classList.remove('hidden');
+      } else {
+        noResults?.classList.add('hidden');
+      }
+    });
+  });
+</script>
+
+<style>
+  .filter-btn.active {
+    box-shadow: 0 0 20px rgba(0, 255, 240, 0.5);
+  }
+</style>

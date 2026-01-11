@@ -1,0 +1,166 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import ParticlesBackground from '../components/ParticlesBackground.astro';
+import ScrollToTop from '../components/ScrollToTop.astro';
+import { SITE_CONFIG } from '../utils/config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  author?: string;
+  keywords?: string;
+  type?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+}
+
+const {
+  title = SITE_CONFIG.title,
+  description = SITE_CONFIG.description,
+  image = `${SITE_CONFIG.url}/og-image.svg`,
+  author = SITE_CONFIG.name,
+  keywords = "portfolio, web development, blockchain, cybersecurity, full-stack developer",
+  type = "website",
+  publishedTime,
+  modifiedTime
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pageTitle = title === SITE_CONFIG.title ? title : `${title} | ${SITE_CONFIG.name}`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico.svg" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png.svg" />
+    
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={description} />
+    <meta name="author" content={author} />
+    <meta name="keywords" content={keywords} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={`${title} - Preview Image`} />
+    <meta property="og:site_name" content={SITE_CONFIG.name} />
+    <meta property="og:locale" content="en_US" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {author && <meta property="article:author" content={author} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={`${title} - Preview Image`} />
+    {SITE_CONFIG.social.twitter && <meta name="twitter:site" content={SITE_CONFIG.social.twitter} />}
+    <meta name="twitter:creator" content={author} />
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+
+    <!-- Preload critical fonts for LCP -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" />
+    </noscript>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0a0f1c" />
+
+    <!-- AOS CSS - Load with media print trick for non-blocking -->
+    <link rel="preload" href="https://unpkg.com/aos@next/dist/aos.css" as="style" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" /></noscript>
+
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  </head>
+  <body class="bg-cyber-dark text-cyber-text">
+    {SITE_CONFIG.features.particleEffects && <ParticlesBackground />}
+    <Navigation />
+
+    <main class="min-h-screen pt-20">
+      <slot />
+    </main>
+
+    <Footer />
+    <ScrollToTop />
+
+    <!-- AOS JS - Async & Defer for non-blocking -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js" async defer is:inline></script>
+    <script is:inline>
+      // Wait for AOS library to load
+      function initAOS() {
+        if (typeof AOS !== 'undefined') {
+          AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100,
+            disable: function() {
+              // Disable on mobile for better performance
+              return window.innerWidth < 768;
+            }
+          });
+        } else {
+          // Retry if AOS not loaded yet
+          setTimeout(initAOS, 100);
+        }
+      }
+
+      // Initialize after page loads
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', initAOS);
+      } else {
+        initAOS();
+      }
+    </script>
+
+    <!-- Fade up animations -->
+    <script>
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.fade-up').forEach(el => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>

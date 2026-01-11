@@ -1,0 +1,13 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`w-full my-12 ${className}`}>
+  <div class="relative h-[2px] w-full bg-gradient-to-r from-transparent via-cyber-cyan to-transparent">
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-cyber-cyan rounded-full animate-pulse"></div>
+  </div>
+</div>

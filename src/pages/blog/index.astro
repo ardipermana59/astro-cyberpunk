@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import SectionDivider from '../../components/SectionDivider.astro';
+import { getBlogPosts, getBlogTags } from '../../utils/content';
+import { SITE_CONFIG } from '../../utils/config';
+
+const posts = await getBlogPosts();
+const tags = await getBlogTags();
+---
+
+<BaseLayout
+  title="Blog"
+  description="Read articles about web development, security, blockchain, and technology by ${SITE_CONFIG.name}"
+  keywords={`blog, articles, ${tags.join(', ')}, web development, technology, ${SITE_CONFIG.name}`}
+  type="website"
+>
+  <section class="py-10">
+    <div class="container mx-auto px-4">
+      <SectionDivider />
+
+      <!-- Header -->
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h1 class="font-orbitron text-5xl md:text-6xl font-bold neon-text-magenta mb-4">
+          Blog
+        </h1>
+        <p class="text-cyber-text/60 text-lg max-w-2xl mx-auto">
+          Thoughts, tutorials, and insights on technology and development
+        </p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto mb-8" data-aos="fade-up">
+        <div class="relative">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search articles..."
+            class="w-full px-6 py-4 pl-12 bg-cyber-gray/50 border-2 border-cyber-magenta/30 rounded-lg text-cyber-text focus:border-cyber-magenta focus:outline-none transition-colors"
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-cyber-magenta absolute left-4 top-1/2 transform -translate-y-1/2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Filter Tags -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
+        <button
+          class="filter-btn active px-4 py-2 rounded-full border-2 border-cyber-magenta text-cyber-magenta font-rajdhani transition-all duration-300 hover:bg-cyber-magenta hover:text-cyber-dark"
+          data-filter="all"
+        >
+          All Posts
+        </button>
+        {tags.map((tag) => (
+          <button
+            class="filter-btn px-4 py-2 rounded-full border-2 border-cyber-magenta/30 text-cyber-text/80 font-rajdhani transition-all duration-300 hover:border-cyber-magenta hover:text-cyber-magenta cursor-pointer"
+            data-filter={tag}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+
+      <!-- Blog Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="blog-grid">
+        {posts.map((post, index) => (
+          <div class="blog-item" data-tags={post.tags.join(',')} data-title={post.title.toLowerCase()} data-summary={post.summary.toLowerCase()}>
+            <BlogCard post={post} index={index} />
+          </div>
+        ))}
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="hidden text-center py-10">
+        <div class="text-cyber-magenta text-6xl mb-4">📝</div>
+        <h3 class="font-orbitron text-2xl text-cyber-text mb-2">No articles found</h3>
+        <p class="text-cyber-text/60">Try a different search term or category</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const blogItems = document.querySelectorAll('.blog-item');
+  const noResults = document.getElementById('no-results');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  let currentFilter = 'all';
+
+  function filterPosts() {
+    const searchTerm = searchInput?.value.toLowerCase() || '';
+    let visibleCount = 0;
+
+    blogItems.forEach((item) => {
+      const tags = item.getAttribute('data-tags') || '';
+      const title = item.getAttribute('data-title') || '';
+      const summary = item.getAttribute('data-summary') || '';
+
+      const matchesFilter = currentFilter === 'all' || tags.includes(currentFilter);
+      const matchesSearch = !searchTerm ||
+        title.includes(searchTerm) ||
+        summary.includes(searchTerm) ||
+        tags.includes(searchTerm);
+
+      if (matchesFilter && matchesSearch) {
+        item.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    // Show/hide no results message
+    if (visibleCount === 0) {
+      noResults?.classList.remove('hidden');
+    } else {
+      noResults?.classList.add('hidden');
+    }
+  }
+
+  // Filter by tag
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentFilter = btn.getAttribute('data-filter') || 'all';
+
+      // Update active button
+      filterBtns.forEach((b) => b.classList.remove('active', 'bg-cyber-magenta', 'text-cyber-dark'));
+      btn.classList.add('active', 'bg-cyber-magenta', 'text-cyber-dark');
+
+      filterPosts();
+    });
+  });
+
+  // Search functionality
+  searchInput?.addEventListener('input', filterPosts);
+</script>
+
+<style>
+  .filter-btn.active {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+  }
+
+  #search-input:focus {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+  }
+</style>

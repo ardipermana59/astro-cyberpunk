@@ -1,0 +1,58 @@
+---
+interface Props {
+  position?: 'all' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'top' | 'bottom' | 'left' | 'right';
+  color?: string;
+  colorTop?: string;
+  colorBottom?: string;
+  colorLeft?: string;
+  colorRight?: string;
+  size?: string;
+  hoverSize?: string;
+  className?: string;
+}
+
+const {
+  position = 'all',
+  color = 'var(--cyber-cyan)',
+  colorTop = color,
+  colorBottom = color,
+  colorLeft = color,
+  colorRight = color,
+  size = 'w-4 h-4',
+  hoverSize = 'w-6 h-6',
+  className = ''
+} = Astro.props;
+
+const showTopLeft = ['all', 'top', 'left', 'top-left'].includes(position);
+const showTopRight = ['all', 'top', 'right', 'top-right'].includes(position);
+const showBottomLeft = ['all', 'bottom', 'left', 'bottom-left'].includes(position);
+const showBottomRight = ['all', 'bottom', 'right', 'bottom-right'].includes(position);
+---
+
+{showTopLeft && (
+  <div
+    class={`absolute top-0 left-0 ${size} border-t-2 border-l-2 transition-all duration-300 group-hover:${hoverSize} ${className}`}
+    style={`border-color: ${colorTop};`}
+  ></div>
+)}
+
+{showTopRight && (
+  <div
+    class={`absolute top-0 right-0 ${size} border-t-2 border-r-2 transition-all duration-300 group-hover:${hoverSize} ${className}`}
+    style={`border-color: ${colorRight};`}
+  ></div>
+)}
+
+{showBottomLeft && (
+  <div
+    class={`absolute bottom-0 left-0 ${size} border-b-2 border-l-2 transition-all duration-300 group-hover:${hoverSize} ${className}`}
+    style={`border-color: ${colorLeft};`}
+  ></div>
+)}
+
+{showBottomRight && (
+  <div
+    class={`absolute bottom-0 right-0 ${size} border-b-2 border-r-2 transition-all duration-300 group-hover:${hoverSize} ${className}`}
+    style={`border-color: ${colorBottom};`}
+  ></div>
+)}

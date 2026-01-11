@@ -1,0 +1,16 @@
+# Robots.txt for Cyberpunk Portfolio
+# https://ardipermana.dev
+
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas (if any)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Crawl-delay: 10
+
+# Sitemap location
+Sitemap: https://ardipermana.dev/sitemap-index.xml
+Sitemap: https://ardipermana.dev/sitemap-0.xml
+

@@ -1,0 +1,229 @@
+---
+import NeonButton from '../NeonButton.astro';
+import { SITE_CONFIG } from '../../utils/config';
+---
+
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="container mx-auto px-4 z-10">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Greeting -->
+      <div class="mb-6" data-aos="fade-down">
+        <span class="text-cyber-cyan font-orbitron text-sm md:text-base uppercase tracking-widest">
+          Welcome to the future
+        </span>
+      </div>
+
+      <!-- Main Title with Typing Effect -->
+      <h1 class="font-orbitron font-bold mb-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="text-4xl md:text-6xl lg:text-7xl mb-2">
+          Hi, I'm <span class="neon-text-cyan">{SITE_CONFIG.name}</span>
+        </div>
+      </h1>
+
+      <!-- Tagline with Glitch Effect -->
+      <div class="mb-8" data-aos="fade-up" data-aos-delay="400">
+        <p class="text-xl md:text-2xl lg:text-3xl font-rajdhani text-cyber-text">
+          <span class="neon-text-magenta">{SITE_CONFIG.tagline}</span>
+        </p>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-12" data-aos="fade-up" data-aos-delay="600">
+        <p class="text-lg md:text-xl text-cyber-text/80 max-w-2xl mx-auto">
+          Building the future of web with cutting-edge technologies. Specialized in blockchain,
+          cryptography, and creating secure digital experiences.
+        </p>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap gap-4 justify-center mb-12 md:mb-16" data-aos="fade-up" data-aos-delay="800">
+        {SITE_CONFIG.features.contactForm && (
+          <NeonButton href="#contact" variant="cyan" size="lg">
+            Contact
+          </NeonButton>
+        )}
+        {SITE_CONFIG.cv && SITE_CONFIG.cv !== "" && SITE_CONFIG.cv !== "#" && (
+          <NeonButton href={SITE_CONFIG.cv} variant="magenta" size="lg" target="_blank">
+            Download CV
+          </NeonButton>
+        )}
+      </div>
+
+      <!-- Scroll Indicator - Mouse -->
+      <div class="flex justify-center pt-8 md:pt-12 animate-bounce" data-aos="fade-up" data-aos-delay="1000">
+        <div class="mouse-container">
+          <div class="mouse-body">
+            <!-- Mouse Wheel -->
+            <div class="mouse-wheel"></div>
+          </div>
+          <p class="mouse-text">Scroll Down</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Elements -->
+  <div class="absolute top-20 left-10 w-20 h-20 border-2 border-cyber-cyan/30 rounded-lg rotate-45 animate-spin" style="animation-duration: 8s;"></div>
+  <div class="absolute bottom-40 right-20 w-16 h-16 border-2 border-cyber-magenta/30 rounded-lg animate-pulse"></div>
+  <div class="absolute top-1/2 right-10 w-24 h-24 border-2 border-cyber-cyan/20 rounded-full animate-ping" style="animation-duration: 3s;"></div>
+</section>
+
+<script>
+  // Typing animation for hero title
+  function typeWriter() {
+    const title = document.querySelector('.neon-text-cyan') as HTMLElement | null;
+    if (!title) return;
+
+    const text = title.textContent || '';
+    title.textContent = '';
+    title.style.display = 'inline-block';
+
+    let i = 0;
+    const speed = 100;
+
+    function type() {
+      if (!title) return;
+      if (i < text.length) {
+        title.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      } else {
+        // Add glow pulse after typing completes
+        title.classList.add('glow-pulse');
+      }
+    }
+
+    setTimeout(type, 1000);
+  }
+
+  // Run typing animation
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', typeWriter);
+  } else {
+    typeWriter();
+  }
+</script>
+
+<style>
+  .neon-text-cyan,
+  .neon-text-magenta {
+    display: inline-block;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Mouse Scroll Indicator */
+  .mouse-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .mouse-body {
+    width: 28px;
+    height: 46px;
+    border: 2px solid;
+    border-radius: 14px;
+    position: relative;
+    background: transparent;
+    border-color: var(--cyber-cyan);
+    box-shadow:
+      0 0 10px rgba(0, 255, 240, 0.3),
+      inset 0 0 10px rgba(0, 255, 240, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .mouse-body::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.3;
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+
+  .mouse-wheel {
+    width: 4px;
+    height: 8px;
+    background: linear-gradient(180deg, var(--cyber-cyan), var(--cyber-magenta));
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll-wheel 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--cyber-cyan);
+  }
+
+  .mouse-text {
+    font-size: 0.75rem;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.8;
+    animation: fade-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-wheel {
+    0% {
+      opacity: 1;
+      top: 8px;
+    }
+    50% {
+      opacity: 0.5;
+      top: 20px;
+    }
+    100% {
+      opacity: 0;
+      top: 28px;
+    }
+  }
+
+  @keyframes pulse-border {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes fade-pulse {
+    0%, 100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .mouse-container:hover .mouse-body {
+    border-color: var(--cyber-magenta);
+    box-shadow:
+      0 0 15px rgba(255, 0, 255, 0.5),
+      inset 0 0 15px rgba(255, 0, 255, 0.1);
+  }
+</style>

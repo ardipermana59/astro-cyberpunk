@@ -1,0 +1,125 @@
+---
+import SectionDivider from '../SectionDivider.astro';
+import SectionTitle from '../SectionTitle.astro';
+import { FAQ_DATA } from '../../utils/config';
+---
+
+<section id="faq" class="py-10">
+  <div class="container mx-auto px-4">
+    <SectionDivider />
+
+    <!-- Section Title -->
+    <SectionTitle
+      title="Frequently Asked Questions"
+      subtitle="Got questions? Here are some answers"
+    />
+
+    <!-- FAQ Accordion -->
+    <div class="max-w-3xl mx-auto space-y-4">
+      {FAQ_DATA.map((faq, index) => (
+        <div
+          class="faq-item glass-effect rounded-lg overflow-hidden border-2 border-transparent hover:border-cyber-cyan transition-all duration-300"
+          data-aos="fade-up"
+          data-aos-delay={index * 100}
+        >
+          <button
+            class="faq-question w-full text-left px-6 py-4 flex justify-between items-center group cursor-pointer"
+            aria-expanded="false"
+          >
+            <span class="font-rajdhani text-lg font-semibold text-cyber-text group-hover:text-cyber-cyan transition-colors pr-4">
+              {faq.question}
+            </span>
+            <svg
+              class="faq-icon w-6 h-6 text-cyber-cyan transition-transform duration-300 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-4 text-cyber-text/80 leading-relaxed">
+              {faq.answer}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // FAQ Accordion functionality
+  document.querySelectorAll('.faq-question').forEach((button) => {
+    button.addEventListener('click', () => {
+      const faqItem = button.closest('.faq-item');
+      const answer = faqItem?.querySelector('.faq-answer') as HTMLElement;
+      const icon = button.querySelector('.faq-icon');
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      // Close all other FAQ items
+      document.querySelectorAll('.faq-item').forEach((item) => {
+        if (item !== faqItem) {
+          const otherAnswer = item.querySelector('.faq-answer') as HTMLElement;
+          const otherIcon = item.querySelector('.faq-icon');
+          const otherButton = item.querySelector('.faq-question');
+
+          if (otherAnswer) {
+            otherAnswer.style.maxHeight = '0px';
+          }
+          if (otherIcon) {
+            otherIcon.style.transform = 'rotate(0deg)';
+          }
+          if (otherButton) {
+            otherButton.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+
+      // Toggle current FAQ item
+      if (answer) {
+        if (isExpanded) {
+          answer.style.maxHeight = '0px';
+          button.setAttribute('aria-expanded', 'false');
+          if (icon) {
+            icon.style.transform = 'rotate(0deg)';
+          }
+        } else {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          button.setAttribute('aria-expanded', 'true');
+          if (icon) {
+            icon.style.transform = 'rotate(180deg)';
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq-item {
+    position: relative;
+  }
+
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #00fff0, #ff00ff);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .faq-item:hover::before {
+    opacity: 1;
+  }
+
+  .faq-answer {
+    transition: max-height 0.3s ease-out;
+  }
+</style>

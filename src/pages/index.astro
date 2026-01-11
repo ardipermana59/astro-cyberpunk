@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
+import AboutSection from '../components/sections/AboutSection.astro';
+import SkillsSection from '../components/sections/SkillsSection.astro';
+import TestimonialSection from '../components/sections/TestimonialSection.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE_CONFIG } from '../utils/config';
+---
+
+<BaseLayout>
+  <HeroSection />
+  <AboutSection />
+  <SkillsSection />
+  <TestimonialSection />
+  <FAQSection />
+  {SITE_CONFIG.features.contactForm && <ContactSection />}
+</BaseLayout>

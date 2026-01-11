@@ -1,0 +1,72 @@
+---
+import type { BlogPost } from '../utils/content';
+
+interface Props {
+  post: BlogPost;
+  index?: number;
+}
+
+const { post, index = 0 } = Astro.props;
+---
+
+<a
+  href={`/blog/${post.slug}`}
+  class="group block"
+  data-aos="fade-up"
+  data-aos-delay={index * 100}
+>
+  <article class="glass-effect rounded-lg overflow-hidden border-2 border-transparent hover:border-cyber-magenta transition-all duration-300 h-full">
+    <!-- Image -->
+    <div class="relative h-48 overflow-hidden">
+      <img
+        src={post.image}
+        alt={post.title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-cyber-dark via-transparent to-transparent opacity-60"></div>
+
+      <!-- Tags -->
+      <div class="absolute top-4 right-4 flex flex-wrap gap-2">
+        {post.tags.slice(0, 2).map((tag) => (
+          <span class="px-3 py-1 text-xs font-orbitron backdrop-blur-md border rounded-full" style="background: rgba(0, 255, 240, 0.2); border-color: rgb(0, 255, 240); color: rgb(0, 255, 240);">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6">
+      <div class="flex items-center gap-2 mb-3 text-cyber-text/60 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <time>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+      </div>
+
+      <h3 class="font-orbitron text-xl font-bold text-cyber-magenta mb-3 group-hover:neon-text-magenta transition-all">
+        {post.title}
+      </h3>
+
+      <p class="text-cyber-text/80 text-sm mb-4 line-clamp-3">
+        {post.summary}
+      </p>
+
+      <div class="flex items-center gap-2 text-cyber-magenta text-sm group-hover:text-cyber-cyan transition-colors">
+        <span>Read more</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+    </div>
+  </article>
+</a>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
